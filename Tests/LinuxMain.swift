@@ -3,6 +3,6 @@ import XCTest
 import AppTests
 
 var tests = [XCTestCaseEntry]()
-tests += StubTests.allTests()
+tests += AppTests.allTests()
 
 XCTMain(tests)
