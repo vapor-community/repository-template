@@ -2,7 +2,7 @@ import FluentSQLite
 import Vapor
 
 /// A single entry of a Todo list.
-final class Todo {
+final class Todo: Codable {
     /// The unique identifier for this `Todo`.
     var id: Int?
 
