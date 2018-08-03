@@ -1,5 +1,11 @@
 import Vapor
 
 public func setupRepositories(_ config: inout Config, _ env: inout Environment, _ services: inout Services) {
-    services.register(TodoRepository(), as: TodoRepository.self)
+    services.register(SQLTodoRepository(), as: TodoRepository.self)
+
+    preferDatabaseRepositories(config: &config)
+}
+
+public func preferDatabaseRepositories(config: inout Config) {
+    config.prefer(SQLTodoRepository.self, for: TodoRepository.self)
 }

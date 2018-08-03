@@ -13,7 +13,7 @@ final class TodoController {
             criteria.append(.make(\Todo.title, .equal, [title]))
         }
 
-        return repository.findBy(criteria: criteria, on: req)
+        return repository.findBy(criteria: criteria, orderBy: nil, on: req)
     }
 
     /// Saves a decoded `Todo` to the database.

@@ -1,7 +1,7 @@
 import App
 import XCTest
 
-final class AppTests: XCTestCase {
+final class StubTests: XCTestCase {
     func testNothing() throws {
         // add your tests here
         XCTAssert(true)
