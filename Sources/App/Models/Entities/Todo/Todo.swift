@@ -2,7 +2,7 @@ import FluentSQLite
 import Vapor
 
 /// A single entry of a Todo list.
-final class Todo: SQLiteModel {
+final class Todo {
     /// The unique identifier for this `Todo`.
     var id: Int?
 
@@ -15,6 +15,9 @@ final class Todo: SQLiteModel {
         self.title = title
     }
 }
+
+/// Allows `Todo` to be used as Fluent model.
+extension Todo: SQLiteModel { }
 
 /// Allows `Todo` to be used as a dynamic migration.
 extension Todo: Migration { }

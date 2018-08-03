@@ -41,9 +41,13 @@ final class SQLTodoRepository: TodoRepository {
     }
 
     func findOneBy(criteria: [FilterOperator<Todo.Database, Todo>], on connectable: DatabaseConnectable) -> Future<Todo?> {
-        return self.findBy(criteria: criteria, on: connectable).map { models in
-            return models[0]
+        var query = Todo.query(on: connectable)
+
+        criteria.forEach { filter in
+            query = query.filter(filter)
         }
+
+        return query.first()
     }
 
     func count(on connectable: DatabaseConnectable) -> Future<Int> {
