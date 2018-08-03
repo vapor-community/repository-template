@@ -1,14 +1,14 @@
 import Vapor
-import FluentSQLite
+import Fluent
 
-class TodoRepository: ModelRepository {
+class TodoRepository: EntityRepository {
     typealias M = Todo
 
-    func find(title: String, on connectable: DatabaseConnectable) -> Future<Todo?> {
-        return Todo.query(on: connectable).filter(\Todo.title == title).first()
+    func count(on connectable: DatabaseConnectable) -> EventLoopFuture<Int> {
+        return M.query(on: connectable).count()
     }
 
-    func findCount(title: String, on connectable: DatabaseConnectable) -> Future<Int> {
-        return Todo.query(on: connectable).filter(\Todo.title == title).count()
+    func save(model: M, on connectable: DatabaseConnectable) -> EventLoopFuture<M> {
+        return model.save(on: connectable)
     }
 }

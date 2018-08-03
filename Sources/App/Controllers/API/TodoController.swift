@@ -1,11 +1,19 @@
 import Vapor
+import FluentSQLite
 
 /// Controls basic CRUD operations on `Todo`s.
 final class TodoController {
     /// Returns a list of all `Todo`s.
     func index(_ req: Request) throws -> Future<[Todo]> {
         let repository = try req.make(TodoRepository.self)
-        return repository.findAll(on: req)
+
+        var criteria: [FilterOperator<Todo.Database, Todo>] = []
+
+        if let title = req.query[String.self, at: "title"] {
+            criteria.append(.make(\Todo.title, .equal, [title]))
+        }
+
+        return repository.findBy(criteria: criteria, on: req)
     }
 
     /// Saves a decoded `Todo` to the database.
