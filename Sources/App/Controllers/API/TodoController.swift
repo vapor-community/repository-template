@@ -7,7 +7,9 @@ final class TodoController: RouteCollection {
         let todos = router.grouped("todos")
 
         todos.get(use: self.index)
-        todos.post(Todo.self, use: self.create)
+        todos.post(Todo.CreateRequest.self, use: self.create)
+        todos.put(Todo.UpdateRequest.self, at: Todo.parameter, use: self.update)
+        todos.post(Todo.parameter, "toggle", use: self.toggle)
         todos.delete(Todo.parameter, use: self.delete)
     }
 
@@ -25,9 +27,21 @@ final class TodoController: RouteCollection {
     }
 
     /// Saves a decoded `Todo` to the database.
-    func create(_ req: Request, payload: Todo) throws -> Future<Todo> {
+    func create(_ req: Request, payload: Todo.CreateRequest) throws -> Future<Todo> {
         let repository = try req.make(TodoRepository.self)
-        return repository.save(model: payload, on: req)
+        let todo = Todo(from: payload)
+        return repository.create(todo, on: req)
+    }
+
+    /// Updates a decoded `Todo` to the database.
+    func update(_ req: Request, payload: Todo.UpdateRequest) throws -> Future<Todo> {
+        let repository = try req.make(TodoRepository.self)
+        return try req.parameters.next(Todo.self).flatMap { todo in
+            todo.title = payload.title
+            todo.body = payload.body
+            todo.completed = payload.completed
+            return repository.update(todo, on: req)
+        }
     }
 
     /// Deletes a parameterized `Todo`.
@@ -35,5 +49,14 @@ final class TodoController: RouteCollection {
         return try req.parameters.next(Todo.self).flatMap { todo in
             return todo.delete(on: req)
         }.transform(to: .noContent)
+    }
+
+    /// Toggle status of a decoded `Todo` to the database.
+    func toggle(_ req: Request) throws -> Future<Todo> {
+        let repository = try req.make(TodoRepository.self)
+        return try req.parameters.next(Todo.self).flatMap { todo in
+            todo.completed = !todo.completed
+            return repository.update(todo, on: req)
+        }
     }
 }

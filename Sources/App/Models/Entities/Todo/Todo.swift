@@ -9,11 +9,28 @@ final class Todo: Codable {
     /// A title describing what this `Todo` entails.
     var title: String
 
+    /// A details describing what this `Todo` entails.
+    var body: String?
+
+    /// Indicates whether `Todo` was completed.
+    var completed: Bool = false
+
+    var createdAt: Date?
+    var updatedAt: Date?
+    var deletedAt: Date?
+
     /// Creates a new `Todo`.
-    init(id: Int? = nil, title: String) {
+    init(id: Int? = nil, title: String, body: String?) {
         self.id = id
         self.title = title
+        self.body = body
     }
+}
+
+extension Todo {
+    static var createdAtKey: TimestampKey? = \.createdAt
+    static var updatedAtKey: TimestampKey? = \.updatedAt
+    static var deletedAtKey: TimestampKey? = \.deletedAt
 }
 
 /// Allows `Todo` to be used as Fluent model.
