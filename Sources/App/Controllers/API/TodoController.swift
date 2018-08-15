@@ -7,8 +7,8 @@ final class TodoController: RouteCollection {
         let todos = router.grouped("todos")
 
         todos.get(use: self.index)
-        todos.post(Todo.CreateRequest.self, use: self.create)
-        todos.put(Todo.UpdateRequest.self, at: Todo.parameter, use: self.update)
+        todos.post(CreateTodoRequest.self, use: self.create)
+        todos.put(UpdateTodoRequest.self, at: Todo.parameter, use: self.update)
         todos.post(Todo.parameter, "toggle", use: self.toggle)
         todos.delete(Todo.parameter, use: self.delete)
     }
@@ -20,26 +20,32 @@ final class TodoController: RouteCollection {
         var criteria: [FilterOperator<Todo.Database, Todo>] = []
 
         if let title = req.query[String.self, at: "title"] {
-            criteria.append(.make(\Todo.title, .equal, [title]))
+            criteria.append(\Todo.title == title)
         }
 
         return repository.findBy(criteria: criteria, orderBy: nil, on: req)
     }
 
     /// Saves a decoded `Todo` to the database.
-    func create(_ req: Request, payload: Todo.CreateRequest) throws -> Future<Todo> {
+    func create(_ req: Request, payload: CreateTodoRequest) throws -> Future<Todo> {
         let repository = try req.make(TodoRepository.self)
         let todo = Todo(from: payload)
+
+        try todo.validate()
+
         return repository.create(todo, on: req)
     }
 
     /// Updates a decoded `Todo` to the database.
-    func update(_ req: Request, payload: Todo.UpdateRequest) throws -> Future<Todo> {
+    func update(_ req: Request, payload: UpdateTodoRequest) throws -> Future<Todo> {
         let repository = try req.make(TodoRepository.self)
         return try req.parameters.next(Todo.self).flatMap { todo in
             todo.title = payload.title
             todo.body = payload.body
             todo.completed = payload.completed
+
+            try todo.validate()
+
             return repository.update(todo, on: req)
         }
     }

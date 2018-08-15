@@ -59,7 +59,7 @@ final class SQLTodoRepository: TodoRepository {
     }
 
     func create(_ model: Todo, on connectable: DatabaseConnectable) -> Future<Todo> {
-        return model.save(on: connectable)
+        return model.create(on: connectable)
     }
 
     func update(_ model: Todo, on connectable: DatabaseConnectable) -> Future<Todo> {

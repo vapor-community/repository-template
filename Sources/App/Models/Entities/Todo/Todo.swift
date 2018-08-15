@@ -27,14 +27,12 @@ final class Todo: Codable {
     }
 }
 
-extension Todo {
+/// Allows `Todo` to be used as Fluent model.
+extension Todo: SQLiteModel {
     static var createdAtKey: TimestampKey? = \.createdAt
     static var updatedAtKey: TimestampKey? = \.updatedAt
     static var deletedAtKey: TimestampKey? = \.deletedAt
 }
-
-/// Allows `Todo` to be used as Fluent model.
-extension Todo: SQLiteModel { }
 
 /// Allows `Todo` to be used as a dynamic migration.
 extension Todo: Migration { }
@@ -44,3 +42,12 @@ extension Todo: Content { }
 
 /// Allows `Todo` to be used as a dynamic parameter in route definitions.
 extension Todo: Parameter { }
+
+extension Todo: Validatable {
+    static func validations() throws -> Validations<Todo> {
+        var validations = Validations(Todo.self)
+        try validations.add(\.title, !.empty)
+        try validations.add(\.body, !.empty || .nil)
+        return validations
+    }
+}
