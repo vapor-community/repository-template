@@ -12,7 +12,11 @@ protocol TodoRepository: Service {
 
     func count(on connectable: DatabaseConnectable) -> Future<Int>
 
-    func save(model: Todo, on connectable: DatabaseConnectable) -> Future<Todo>
+    func create(_ todo: Todo, on connectable: DatabaseConnectable) -> Future<Todo>
+
+    func update(_ todo: Todo, on connectable: DatabaseConnectable) -> Future<Todo>
+
+    func delete(_ todo: Todo, on connectable: DatabaseConnectable) -> Future<Void>
 }
 
 final class SQLTodoRepository: TodoRepository {
@@ -54,7 +58,15 @@ final class SQLTodoRepository: TodoRepository {
         return Todo.query(on: connectable).count()
     }
 
-    func save(model: Todo, on connectable: DatabaseConnectable) -> Future<Todo> {
-        return model.save(on: connectable)
+    func create(_ model: Todo, on connectable: DatabaseConnectable) -> Future<Todo> {
+        return model.create(on: connectable)
+    }
+
+    func update(_ model: Todo, on connectable: DatabaseConnectable) -> Future<Todo> {
+        return model.update(on: connectable)
+    }
+
+    func delete(_ model: Todo, on connectable: DatabaseConnectable) -> Future<Void> {
+        return model.delete(on: connectable)
     }
 }
