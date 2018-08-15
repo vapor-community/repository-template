@@ -29,6 +29,8 @@ final class Todo: Codable {
 
 /// Allows `Todo` to be used as Fluent model.
 extension Todo: SQLiteModel {
+    static var entity = "todos"
+
     static var createdAtKey: TimestampKey? = \.createdAt
     static var updatedAtKey: TimestampKey? = \.updatedAt
     static var deletedAtKey: TimestampKey? = \.deletedAt

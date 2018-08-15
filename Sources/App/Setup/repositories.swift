@@ -6,6 +6,6 @@ public func setupRepositories(_ config: inout Config, _ env: inout Environment, 
     preferDatabaseRepositories(config: &config)
 }
 
-public func preferDatabaseRepositories(config: inout Config) {
+private func preferDatabaseRepositories(config: inout Config) {
     config.prefer(SQLTodoRepository.self, for: TodoRepository.self)
 }

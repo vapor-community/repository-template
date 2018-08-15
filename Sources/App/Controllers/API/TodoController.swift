@@ -1,5 +1,5 @@
-import Vapor
 import FluentSQLite
+import Vapor
 
 /// Controls basic CRUD operations on `Todo`s.
 final class TodoController: RouteCollection {
@@ -20,7 +20,7 @@ final class TodoController: RouteCollection {
         var criteria: [FilterOperator<Todo.Database, Todo>] = []
 
         if let title = req.query[String.self, at: "title"] {
-            criteria.append(\Todo.title == title)
+            criteria.append(\.title == title)
         }
 
         return repository.findBy(criteria: criteria, orderBy: nil, on: req)
