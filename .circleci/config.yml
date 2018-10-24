@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  macos:
+  macos-4.1:
     macos:
       xcode: "9.4.1"
     steps:
@@ -9,14 +9,14 @@ jobs:
       - run:
           name: Install LibreSSL
           command: brew install libressl
-      - run: 
+      - run:
           name: Compile code
           command: swift build
-      - run: 
+      - run:
           name: Run unit tests
           command: swift test
 
-  macos-release:
+  macos-release-4.1:
     macos:
       xcode: "9.4.1"
     steps:
@@ -27,24 +27,73 @@ jobs:
       - run:
           name: Compile code with optimizations
           command: swift build -c release
-  linux:
-    docker:
-      - image: swift:4.1
+
+  macos-4.2:
+    macos:
+      xcode: "10.0.0"
     steps:
       - checkout
-      - run: 
+      - run:
+          name: Install LibreSSL
+          command: brew install libressl
+      - run:
           name: Compile code
           command: swift build
-      - run: 
+      - run:
           name: Run unit tests
           command: swift test
 
-  linux-release:
+  macos-release-4.2:
+    macos:
+      xcode: "10.0.0"
+    steps:
+      - checkout
+      - run:
+          name: Install LibreSSL
+          command: brew install libressl
+      - run:
+          name: Compile code with optimizations
+          command: swift build -c release
+
+  linux-4.1:
     docker:
       - image: swift:4.1
     steps:
       - checkout
-      - run: 
+      - run:
+          name: Compile code
+          command: swift build
+      - run:
+          name: Run unit tests
+          command: swift test
+
+  linux-release-4.1:
+    docker:
+      - image: swift:4.1
+    steps:
+      - checkout
+      - run:
+          name: Compile code with optimizations
+          command: swift build -c release
+
+  linux-4.2:
+    docker:
+      - image: swift:4.2
+    steps:
+      - checkout
+      - run:
+          name: Compile code
+          command: swift build
+      - run:
+          name: Run unit tests
+          command: swift test
+
+  linux-release-4.2:
+    docker:
+      - image: swift:4.2
+    steps:
+      - checkout
+      - run:
           name: Compile code with optimizations
           command: swift build -c release
 
@@ -60,10 +109,14 @@ workflows:
   tests:
     jobs:
       - swiftlint
-      - linux
-      - linux-release
-      - macos
-      - macos-release
+      - linux-4.1
+      - linux-release-4.1
+      - macos-4.1
+      - macos-release-4.1
+      - linux-4.2
+      - linux-release-4.2
+      - macos-4.2
+      - macos-release-4.2
 
   nightly:
     triggers:
@@ -74,8 +127,11 @@ workflows:
               only:
                 - master
     jobs:
-      - linux
-      - linux-release
-      - macos
-      - macos-release
-      
+      - linux-4.1
+      - linux-release-4.1
+      - macos-4.1
+      - macos-release-4.1
+      - linux-4.2
+      - linux-release-4.2
+      - macos-4.2
+      - macos-release-4.2
