@@ -8,14 +8,21 @@ nesting:
 opt_in_rules:
   - closure_end_indentation
   - empty_count
+  - empty_parameters
+  - empty_string
+  - empty_xctest_method
+  # Uncomment the next line if you need file headers
+  # - file_header
   - force_unwrapping
   - literal_expression_end_indentation
+  # Uncomment the next line if you use Nimble
+  # - nimble_operator
 
 force_cast: error
 force_try: error
 force_unwrapping: error
 
-line_length: 120
+line_length: 140
 
 identifier_name:
   excluded:
@@ -23,5 +30,16 @@ identifier_name:
     - db
 
 closure_end_indentation: error
+
+# Uncomment the next line if you need file headers
+# file_header:
+#   severity: error
+#   required_pattern: |
+#     \/\/
+#     \/\/  .*?\.swift
+#     \/\/  Vapor App
+#     \/\/
+#     \/\/  Created by .*? on \d{2}\/\d{2}\/\d{2}\.
+#     \/\/  Copyright © \d{4} Vapor Community\. All rights reserved\.
 
 reporter: "emoji"
