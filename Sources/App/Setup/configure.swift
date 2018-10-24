@@ -1,10 +1,18 @@
-import FluentSQLite
-import Vapor
+import FluentPostgreSQL
+import VaporExt
 
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
+    // Load .env file
+    Environment.dotenv()
+
     /// Register providers first
-    try services.register(FluentSQLiteProvider())
+    try services.register(FluentPostgreSQLProvider())
+
+    /// Register server config
+    var serverConfig = NIOServerConfig.default()
+    serverConfig.port = Environment.get("TODO_API_PORT", 8080)
+    services.register(serverConfig)
 
     /// Register routes to the router
     let router = EngineRouter.default()
@@ -12,7 +20,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(router, as: Router.self)
 
     /// Register middlewares
-    var middlewaresConfig = MiddlewareConfig() // Create _empty_ middleware config
+    var middlewaresConfig = MiddlewareConfig()
     try middlewares(config: &middlewaresConfig)
     services.register(middlewaresConfig)
 

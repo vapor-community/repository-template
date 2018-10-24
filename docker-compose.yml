@@ -1,0 +1,10 @@
+version: "3.3"
+services:
+  todosDB:
+    image: "postgres:10-alpine"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=todos
+      - POSTGRES_USER=vapor
+      - POSTGRES_PASSWORD=password

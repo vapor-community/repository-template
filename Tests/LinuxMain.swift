@@ -1,6 +1,6 @@
 import XCTest
 
-import AppTests
+@testable import AppTests
 
 var tests = [XCTestCaseEntry]()
 tests += AppTests.allTests()
